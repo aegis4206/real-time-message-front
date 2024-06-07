@@ -1,0 +1,28 @@
+{
+  "name": "real-time-message-front",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 8006 --host",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview --port 8006 --host"
+  },
+  "dependencies": {
+    "@quasar/extras": "^1.16.11",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "quasar": "^2.16.4",
+    "tailwindcss": "^3.4.3",
+    "vue": "^3.4.21",
+    "vue-easy-lightbox": "^1.19.0"
+  },
+  "devDependencies": {
+    "@quasar/vite-plugin": "^1.7.0",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "sass": "^1.33.0",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0",
+    "vue-tsc": "^2.0.6"
+  }
+}
