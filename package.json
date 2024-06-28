@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.16.11",
+    "@types/lodash": "^4.17.6",
     "autoprefixer": "^10.4.19",
+    "lodash": "^4.17.21",
     "postcss": "^8.4.38",
     "quasar": "^2.16.4",
     "tailwindcss": "^3.4.3",
@@ -19,6 +21,7 @@
   },
   "devDependencies": {
     "@quasar/vite-plugin": "^1.7.0",
+    "@types/node": "^20.14.2",
     "@vitejs/plugin-vue": "^5.0.4",
     "sass": "^1.33.0",
     "typescript": "^5.2.2",
