@@ -66,16 +66,23 @@ const sendFileHandle = _.debounce(() => {
     const reader = new FileReader();
     reader.readAsDataURL(file.value!);
 
+
     reader.onloadend = () => {
+      const data = reader.result as string
+      // console.log("data", data);
       const messageRep: messageType = {
-        Message: reader.result as string,
+        Message: data ? data : URL.createObjectURL(file.value!),
         From: textBox.userName,
-        Type: "file",
+        Type: data ? "file" : "data",
         File: file.value!.name as string,
         Id: connectId.value,
         To: privateTarget.Uuid,
         ToUser: privateTarget.Username
       }
+      reader.onerror = (error) => {
+        console.error('文件讀取錯誤:', error);
+      };
+
 
       socket.value!.send(JSON.stringify(messageRep));
       file.value = null;
@@ -93,8 +100,8 @@ const connectHandle = _.debounce(() => {
     socket.value.onmessage = async function (event) {
       // console.log("接收", event);
       let data: messageType = JSON.parse(event.data)
-      console.log("接收", data);
-      if (data.File && data.File != "" && !data.Type.startsWith('image')) {
+      // console.log("接收", data);
+      if (data.File && data.File != "" && !data.Type.startsWith('image') && data.Type != 'data') {
         const url = base64ToUrl(data.Message, data.Type)
         data.Message = url
       }
@@ -291,6 +298,7 @@ const startVoiceShare = async () => {
     console.error('Error accessing display media.', error);
   }
 }
+
 
 const startScreenShare = async () => {
   try {
@@ -544,9 +552,19 @@ const resetDevice = () => {
   volumeMuted.value = false;
 }
 
-const test = () => {
-  console.log(voiceStreamList);
-}
+// const connectionStateCheck = () => {
+//   console.log("voiceSharePcs", voiceSharePcs);
+//   Object.keys(voiceSharePcs).forEach(async (k) => {
+//     const connectionState = await voiceSharePcs[k].connectionState
+//     console.log('v', k, connectionState);
+//   })
+//   console.log("screenSharePcs", screenSharePcs);
+//   Object.keys(screenSharePcs).forEach(async (k) => {
+//     const connectionState = await screenSharePcs[k].connectionState
+//     console.log('s', k, connectionState);
+//   })
+// }
+
 
 </script>
 
@@ -563,6 +581,7 @@ const test = () => {
             @click="connectHandle">連線</q-btn>
           <q-btn :disable="!wsState" type="button" color="red-5" style="margin-left: 10px"
             @click="disConnectHandle">離線</q-btn>
+          <!-- <q-btn @click="connectionStateCheck" type="button" color="orange-5" style="margin-left: 10px">RTC</q-btn> -->
         </div>
       </div>
       <div class="overflow-y-auto h-4/5 4 border-b-4 md:border-b-0 p-2">
@@ -662,7 +681,6 @@ const test = () => {
   <video v-show="localStream" ref="localVideo" autoplay muted></video>
   <video v-show="remoteStream" ref="remoteVideo" autoplay></video>
   <audio style="display: none;" ref="voiceRef" autoplay :muted="volumeMuted"></audio>
-  <!-- <q-btn @click="test">111112222</q-btn> -->
 </template>
 
 <style scoped></style>
